@@ -1,0 +1,118 @@
+pipeline {
+  agent none
+  options {
+    disableConcurrentBuilds()
+    buildDiscarder(logRotator(numToKeepStr: '8', daysToKeepStr: '20'))
+    timeout(time: 1, unit: 'HOURS')
+  }
+  stages {
+    stage('test') {
+      parallel {
+        stage('clang4-python2') {
+          agent {
+            dockerfile {
+              filename 'Dockerfile.clang4-python2'
+              dir 'jenkins'
+            }
+          }
+          environment {
+	    CMAKE_FLAGS="-DCMAKE_BUILD_TYPE=Debug -DCMAKE_CXX_COMPILER=clang++-4.0 -DCMAKE_CXX_FLAGS=-stdlib=libc++"
+          }
+          steps {
+	    sh 'python ./setup.py develop'
+	    sh '''python -c 'import netket; g = netket.graph.Hypercube(4, 1); h = netket.hilbert.Spin(g, 0.5); m = netket.machine.RbmSpin(h, 10)' '''
+	    sh '''python -m pytest --verbose Test/'''
+	    sh '''python -m pytest --verbose --doctest-glob='*.md' Docs/'''
+          }
+        }
+
+        stage('gcc5-python2') {
+          agent {
+            dockerfile {
+              filename 'Dockerfile.gcc5-python2'
+              dir 'jenkins'
+            }
+          }
+          environment {
+	    CMAKE_FLAGS="-DCMAKE_BUILD_TYPE=Debug -DCMAKE_CXX_COMPILER=g++-5"
+          }
+          steps {
+	    sh 'python ./setup.py develop'
+	    sh '''python -c 'import netket; g = netket.graph.Hypercube(4, 1); h = netket.hilbert.Spin(g, 0.5); m = netket.machine.RbmSpin(h, 10)' '''
+	    sh '''python -m pytest --verbose Test/'''
+	    sh '''python -m pytest --verbose --doctest-glob='*.md' Docs/'''
+          }
+        }
+
+        stage('clang6-python3') {
+          agent {
+            dockerfile {
+              filename 'Dockerfile.clang6-python3'
+              dir 'jenkins'
+            }
+          }
+          environment {
+	    CMAKE_FLAGS="-DCMAKE_BUILD_TYPE=Debug -DCMAKE_CXX_COMPILER=clang++-6.0"
+          }
+          steps {
+	    sh 'python3 ./setup.py develop'
+	    sh '''python3 -c 'import netket; g = netket.graph.Hypercube(4, 1); h = netket.hilbert.Spin(g, 0.5); m = netket.machine.RbmSpin(h, 10)' '''
+	    sh '''python3 -m pytest --verbose Test/'''
+	    sh '''python3 -m pytest --verbose --doctest-glob='*.md' Docs/'''
+          }
+        }
+
+        stage('gcc7-python3') {
+          agent {
+            dockerfile {
+              filename 'Dockerfile.clang6-python3'
+              dir 'jenkins'
+            }
+          }
+          environment {
+	    CMAKE_FLAGS="-DCMAKE_BUILD_TYPE=Debug -DCMAKE_CXX_COMPILER=g++-7"
+	  }
+          steps {
+	    sh 'python3 ./setup.py develop'
+	    sh '''python3 -c 'import netket; g = netket.graph.Hypercube(4, 1); h = netket.hilbert.Spin(g, 0.5); m = netket.machine.RbmSpin(h, 10)' '''
+	    sh '''python3 -m pytest --verbose Test/'''
+	    sh '''python3 -m pytest --verbose --doctest-glob='*.md' Docs/'''
+          }
+        }
+
+        stage('clang7-python3') {
+          agent {
+            dockerfile {
+              filename 'Dockerfile.clang6-python3'
+              dir 'jenkins'
+            }
+          }
+          environment {
+	    CMAKE_FLAGS="-DCMAKE_BUILD_TYPE=Debug -DCMAKE_CXX_COMPILER=clang++-7 -DCMAKE_CXX_FLAGS=-std=c++17"
+	  }
+          steps {
+	    sh 'python3 ./setup.py develop'
+	    sh '''python3 -c 'import netket; g = netket.graph.Hypercube(4, 1); h = netket.hilbert.Spin(g, 0.5); m = netket.machine.RbmSpin(h, 10)' '''
+	    sh '''python3 -m pytest --verbose Test/'''
+	    sh '''python3 -m pytest --verbose --doctest-glob='*.md' Docs/'''
+          }
+        }
+
+        stage('osx-clang') {
+          agent {
+            label 'osx'
+          }
+          environment {
+	    CMAKE_FLAGS="-DCMAKE_BUILD_TYPE=Debug -DCMAKE_CXX_COMPILER=clang++"
+          }
+          steps {
+	    sh 'python3 ./setup.py develop'
+	    sh '''python3 -c 'import netket; g = netket.graph.Hypercube(4, 1); h = netket.hilbert.Spin(g, 0.5); m = netket.machine.RbmSpin(h, 10)' '''
+	    sh '''python3 -m pytest --verbose Test/'''
+	    sh '''python3 -m pytest --verbose --doctest-glob='*.md' Docs/'''
+          }
+        }
+      }
+    }
+  }
+}

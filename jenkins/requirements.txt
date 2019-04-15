@@ -1,0 +1,5 @@
+numpy
+networkx
+pytest
+numdifftools
+python-igraph

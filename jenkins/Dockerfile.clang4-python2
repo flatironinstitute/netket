@@ -1,0 +1,27 @@
+FROM ubuntu:trusty
+
+RUN apt-get update && \
+    DEBIAN_FRONTEND=noninteractive apt-get install -y software-properties-common && \
+    add-apt-repository ppa:ubuntu-toolchain-r/test
+ADD https://apt.llvm.org/llvm-snapshot.gpg.key llvm.key
+RUN apt-key add llvm.key && rm llvm.key
+RUN echo 'deb http://apt.llvm.org/trusty/ llvm-toolchain-trusty main' >> /etc/apt/sources.list && \
+    echo 'deb http://apt.llvm.org/trusty/ llvm-toolchain-trusty-4.0 main' >> /etc/apt/sources.list
+RUN apt-get update && \
+    DEBIAN_FRONTEND=noninteractive apt-get install -y \
+      cmake \
+      clang-4.0 \
+      libc++-dev \
+      libmpich-dev \
+      libz-dev \
+      libxml2-dev \
+      python-dev \
+      python-numpy \
+      python-networkx \
+      python-pytest \
+      python-igraph \
+      python-pip
+
+RUN pip install -U pip setuptools
+ADD requirements.txt .
+RUN pip install -r requirements.txt && rm requirements.txt
