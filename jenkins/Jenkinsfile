@@ -16,10 +16,10 @@ pipeline {
             }
           }
           environment {
-	    CMAKE_FLAGS="-DCMAKE_BUILD_TYPE=Debug -DCMAKE_CXX_COMPILER=clang++-4.0 -DCMAKE_CXX_FLAGS=-stdlib=libc++"
+	    NETKET_CMAKE_FLAGS="-DCMAKE_BUILD_TYPE=Debug -DCMAKE_CXX_COMPILER=clang++-4.0 -DCMAKE_CXX_FLAGS=-stdlib=libc++"
           }
           steps {
-	    sh 'python ./setup.py develop'
+	    sh 'python ./setup.py build_ext --inplace'
 	    sh '''python -c 'import netket; g = netket.graph.Hypercube(4, 1); h = netket.hilbert.Spin(g, 0.5); m = netket.machine.RbmSpin(h, 10)' '''
 	    sh '''python -m pytest --verbose Test/'''
 	    sh '''python -m pytest --verbose --doctest-glob='*.md' Docs/'''
@@ -34,10 +34,10 @@ pipeline {
             }
           }
           environment {
-	    CMAKE_FLAGS="-DCMAKE_BUILD_TYPE=Debug -DCMAKE_CXX_COMPILER=g++-5"
+	    NETKET_CMAKE_FLAGS="-DCMAKE_BUILD_TYPE=Debug -DCMAKE_CXX_COMPILER=g++-5"
           }
           steps {
-	    sh 'python ./setup.py develop'
+	    sh 'python ./setup.py build_ext --inplace'
 	    sh '''python -c 'import netket; g = netket.graph.Hypercube(4, 1); h = netket.hilbert.Spin(g, 0.5); m = netket.machine.RbmSpin(h, 10)' '''
 	    sh '''python -m pytest --verbose Test/'''
 	    sh '''python -m pytest --verbose --doctest-glob='*.md' Docs/'''
@@ -52,10 +52,10 @@ pipeline {
             }
           }
           environment {
-	    CMAKE_FLAGS="-DCMAKE_BUILD_TYPE=Debug -DCMAKE_CXX_COMPILER=clang++-6.0"
+	    NETKET_CMAKE_FLAGS="-DCMAKE_BUILD_TYPE=Debug -DCMAKE_CXX_COMPILER=clang++-6.0"
           }
           steps {
-	    sh 'python3 ./setup.py develop'
+	    sh 'python3 ./setup.py build_ext --inplace'
 	    sh '''python3 -c 'import netket; g = netket.graph.Hypercube(4, 1); h = netket.hilbert.Spin(g, 0.5); m = netket.machine.RbmSpin(h, 10)' '''
 	    sh '''python3 -m pytest --verbose Test/'''
 	    sh '''python3 -m pytest --verbose --doctest-glob='*.md' Docs/'''
@@ -70,10 +70,10 @@ pipeline {
             }
           }
           environment {
-	    CMAKE_FLAGS="-DCMAKE_BUILD_TYPE=Debug -DCMAKE_CXX_COMPILER=g++-7"
+	    NETKET_CMAKE_FLAGS="-DCMAKE_BUILD_TYPE=Debug -DCMAKE_CXX_COMPILER=g++-7"
 	  }
           steps {
-	    sh 'python3 ./setup.py develop'
+	    sh 'python3 ./setup.py build_ext --inplace'
 	    sh '''python3 -c 'import netket; g = netket.graph.Hypercube(4, 1); h = netket.hilbert.Spin(g, 0.5); m = netket.machine.RbmSpin(h, 10)' '''
 	    sh '''python3 -m pytest --verbose Test/'''
 	    sh '''python3 -m pytest --verbose --doctest-glob='*.md' Docs/'''
@@ -88,25 +88,25 @@ pipeline {
             }
           }
           environment {
-	    CMAKE_FLAGS="-DCMAKE_BUILD_TYPE=Debug -DCMAKE_CXX_COMPILER=clang++-7 -DCMAKE_CXX_FLAGS=-std=c++17"
+	    NETKET_CMAKE_FLAGS="-DCMAKE_BUILD_TYPE=Debug -DCMAKE_CXX_COMPILER=clang++-7 -DCMAKE_CXX_FLAGS=-std=c++17"
 	  }
           steps {
-	    sh 'python3 ./setup.py develop'
+	    sh 'python3 ./setup.py build_ext --inplace'
 	    sh '''python3 -c 'import netket; g = netket.graph.Hypercube(4, 1); h = netket.hilbert.Spin(g, 0.5); m = netket.machine.RbmSpin(h, 10)' '''
 	    sh '''python3 -m pytest --verbose Test/'''
 	    sh '''python3 -m pytest --verbose --doctest-glob='*.md' Docs/'''
           }
         }
 
-        stage('osx-clang') {
+        stage('osx-clang-python3') {
           agent {
             label 'osx'
           }
           environment {
-	    CMAKE_FLAGS="-DCMAKE_BUILD_TYPE=Debug -DCMAKE_CXX_COMPILER=clang++"
+	    NETKET_CMAKE_FLAGS="-DCMAKE_BUILD_TYPE=Debug -DCMAKE_CXX_COMPILER=clang++"
           }
           steps {
-	    sh 'python3 ./setup.py develop'
+	    sh 'python3 ./setup.py build_ext --inplace'
 	    sh '''python3 -c 'import netket; g = netket.graph.Hypercube(4, 1); h = netket.hilbert.Spin(g, 0.5); m = netket.machine.RbmSpin(h, 10)' '''
 	    sh '''python3 -m pytest --verbose Test/'''
 	    sh '''python3 -m pytest --verbose --doctest-glob='*.md' Docs/'''
