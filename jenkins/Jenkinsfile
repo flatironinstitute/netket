@@ -83,7 +83,7 @@ pipeline {
         stage('clang7-python3') {
           agent {
             dockerfile {
-              filename 'Dockerfile.clang6-python3'
+              filename 'Dockerfile.clang7-python3'
               dir 'jenkins'
             }
           }

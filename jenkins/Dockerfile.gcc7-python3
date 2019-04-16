@@ -5,7 +5,7 @@ RUN apt-get update && \
     add-apt-repository ppa:ubuntu-toolchain-r/test
 RUN apt-get update && \
     DEBIAN_FRONTEND=noninteractive apt-get install -y \
-      cmake \
+      cmake3 \
       g++-7 \
       libmpich-dev \
       libz-dev \
