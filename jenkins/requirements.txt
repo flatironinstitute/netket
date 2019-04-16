@@ -1,5 +1,5 @@
-numpy
-networkx
-pytest>=3
-numdifftools
-python-igraph
+numpy>=1.14
+networkx>=2.2
+pytest>=3.3
+numdifftools>=0.9
+python-igraph>=0.7

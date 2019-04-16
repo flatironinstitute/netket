@@ -16,9 +16,6 @@ RUN apt-get update && \
       libz-dev \
       libxml2-dev \
       python-dev \
-      python-numpy \
-      python-networkx \
-      python-igraph \
       python-pip
 
 RUN pip install -U pip setuptools && apt-get remove -y python-six

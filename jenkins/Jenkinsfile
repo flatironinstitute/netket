@@ -104,9 +104,12 @@ pipeline {
           }
           environment {
 	    NETKET_CMAKE_FLAGS="-DCMAKE_BUILD_TYPE=Debug -DCMAKE_CXX_COMPILER=clang++"
-	    PATH="$BREW/bin:/usr/bin:/bin"
+	    VENV=pwd(tmp:true)
+	    PATH="$VENV/bin:$BREW/bin:/usr/bin:/bin"
           }
           steps {
+	    sh 'virtualenv $VENV'
+	    sh 'pip install -r jenkins/requirements.txt'
 	    sh 'python ./setup.py build_ext --inplace'
 	    sh '''python -c 'import netket; g = netket.graph.Hypercube(4, 1); h = netket.hilbert.Spin(g, 0.5); m = netket.machine.RbmSpin(h, 10)' '''
 	    sh '''python -m pytest --verbose Test/'''
@@ -120,9 +123,12 @@ pipeline {
           }
           environment {
 	    NETKET_CMAKE_FLAGS="-DCMAKE_BUILD_TYPE=Debug -DCMAKE_CXX_COMPILER=clang++"
-	    PATH="$BREW/bin:/usr/bin:/bin"
+	    VENV=pwd(tmp:true)
+	    PATH="$VENV/bin:$BREW/bin:/usr/bin:/bin"
           }
           steps {
+	    sh 'virtualenv $VENV'
+	    sh 'pip install -r jenkins/requirements.txt'
 	    sh 'python3 ./setup.py build_ext --inplace'
 	    sh '''python3 -c 'import netket; g = netket.graph.Hypercube(4, 1); h = netket.hilbert.Spin(g, 0.5); m = netket.machine.RbmSpin(h, 10)' '''
 	    sh '''python3 -m pytest --verbose Test/'''
