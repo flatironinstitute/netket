@@ -127,8 +127,8 @@ pipeline {
 	    PATH="$VENV/bin:$BREW/bin:/usr/bin:/bin"
           }
           steps {
-	    sh 'virtualenv $VENV'
-	    sh 'pip install -r jenkins/requirements.txt'
+	    sh 'python3 -m venv $VENV'
+	    sh 'pip3 install -r jenkins/requirements.txt'
 	    sh 'python3 ./setup.py build_ext --inplace'
 	    sh '''python3 -c 'import netket; g = netket.graph.Hypercube(4, 1); h = netket.hilbert.Spin(g, 0.5); m = netket.machine.RbmSpin(h, 10)' '''
 	    sh '''python3 -m pytest --verbose Test/'''
