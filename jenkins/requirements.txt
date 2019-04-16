@@ -1,5 +1,5 @@
 numpy
 networkx
-pytest
+pytest>=3
 numdifftools
 python-igraph

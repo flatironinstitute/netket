@@ -98,12 +98,29 @@ pipeline {
           }
         }
 
+        stage('osx-clang-python2') {
+          agent {
+            label 'osx'
+          }
+          environment {
+	    NETKET_CMAKE_FLAGS="-DCMAKE_BUILD_TYPE=Debug -DCMAKE_CXX_COMPILER=clang++"
+	    PATH="$BREW/bin:/usr/bin:/bin"
+          }
+          steps {
+	    sh 'python ./setup.py build_ext --inplace'
+	    sh '''python -c 'import netket; g = netket.graph.Hypercube(4, 1); h = netket.hilbert.Spin(g, 0.5); m = netket.machine.RbmSpin(h, 10)' '''
+	    sh '''python -m pytest --verbose Test/'''
+	    sh '''python -m pytest --verbose --doctest-glob='*.md' Docs/'''
+          }
+        }
+
         stage('osx-clang-python3') {
           agent {
             label 'osx'
           }
           environment {
 	    NETKET_CMAKE_FLAGS="-DCMAKE_BUILD_TYPE=Debug -DCMAKE_CXX_COMPILER=clang++"
+	    PATH="$BREW/bin:/usr/bin:/bin"
           }
           steps {
 	    sh 'python3 ./setup.py build_ext --inplace'

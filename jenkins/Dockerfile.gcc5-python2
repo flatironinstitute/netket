@@ -13,10 +13,9 @@ RUN apt-get update && \
       python-dev \
       python-numpy \
       python-networkx \
-      python-pytest \
       python-igraph \
       python-pip
 
-RUN pip install -U pip setuptools
+RUN pip install -U pip setuptools && apt-get remove -y python-six
 ADD requirements.txt .
 RUN pip install -r requirements.txt && rm requirements.txt
