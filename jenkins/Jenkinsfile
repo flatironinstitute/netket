@@ -8,24 +8,6 @@ pipeline {
   stages {
     stage('test') {
       parallel {
-        stage('clang4-python2') {
-          agent {
-            dockerfile {
-              filename 'Dockerfile.clang4-python2'
-              dir 'jenkins'
-            }
-          }
-          environment {
-	    NETKET_CMAKE_FLAGS="-DCMAKE_BUILD_TYPE=Debug -DCMAKE_CXX_COMPILER=clang++-4.0 -DCMAKE_CXX_FLAGS=-stdlib=libc++"
-          }
-          steps {
-	    sh 'python ./setup.py build_ext --inplace'
-	    sh '''python -c 'import netket; g = netket.graph.Hypercube(4, 1); h = netket.hilbert.Spin(g, 0.5); m = netket.machine.RbmSpin(h, 10)' '''
-	    sh '''python -m pytest --verbose Test/'''
-	    sh '''python -m pytest --verbose --doctest-glob='*.md' Docs/'''
-          }
-        }
-
         stage('gcc5-python2') {
           agent {
             dockerfile {
